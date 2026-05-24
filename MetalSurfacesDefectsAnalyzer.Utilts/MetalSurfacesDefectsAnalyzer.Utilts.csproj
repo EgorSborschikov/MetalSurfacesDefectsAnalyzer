@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="PDFsharp" Version="6.1.1" />
+		<PackageReference Include="ScottPlot" Version="5.1.58" />
+		<PackageReference Include="ScottPlot.WPF" Version="5.1.58" />
+		<PackageReference Include="UMAP" Version="1.0.62830" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\MetalSurfacesDefectsAnalyzer.Core\MetalSurfacesDefectsAnalyzer.Core.csproj" />
+	</ItemGroup>
+
+</Project>

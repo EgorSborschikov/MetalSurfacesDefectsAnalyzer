@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.5" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\MetalSurfacesDefectsAnalyzer.Core\MetalSurfacesDefectsAnalyzer.Core.csproj" />
+	  <ProjectReference Include="..\MetalSurfacesDefectsAnalyzer.Utilts\MetalSurfacesDefectsAnalyzer.Utilts.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Resources\UserGuide.pdf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>Resources\%(Filename)%(Extension)</Link>
+		</Content>
+	</ItemGroup>
+
+	<Target Name="CopyModels" AfterTargets="Build">
+		<ItemGroup>
+			<ModelFiles Include="..\MetalSurfacesDefectsAnalyzer.Core\Resources\*.onnx" />
+			<ModelFiles Include="..\MetalSurfacesDefectsAnalyzer.Core\Resources\*.onnx.data" />
+		</ItemGroup>
+		<Copy SourceFiles="@(ModelFiles)" DestinationFolder="$(OutputPath)Models" SkipUnchangedFiles="true" />
+	</Target>
+</Project>

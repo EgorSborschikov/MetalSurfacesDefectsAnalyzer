@@ -1,0 +1,252 @@
+﻿<Window x:Class="MetalSurfacesDefectsAnalyzer.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MetalSurfacesDefectsAnalyzer.App" 
+        xmlns:converters="clr-namespace:MetalSurfacesDefectsAnalyzer.App.Converters"
+        mc:Ignorable="d"
+        Title="Автоматизированная система анализа дефектов металлических поверхностей" 
+        Height="800" Width="1300"
+        MinHeight="600" MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Normal"
+        Loaded="MainWindow_Loaded"
+        SizeChanged="MainWindow_SizeChanged"
+        LocationChanged="MainWindow_LocationChanged"
+        DpiChanged="MainWindow_DpiChanged"
+        ResizeMode="NoResize"
+        FontFamily="Microsoft Sans Serif">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#2C3E50"/>
+        <SolidColorBrush x:Key="SecondaryBrush" Color="#34495E"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#3498DB"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#ECF0F1"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#BDC3C7"/>
+        <SolidColorBrush x:Key="StatusBarBrush" Color="#2C3E50"/>
+        <SolidColorBrush x:Key="NavigationBrush" Color="#3D5A80"/>
+
+        <Style x:Key="ToolbarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#4A6FA5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#3D5A80"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="NavigationButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource NavigationBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#4A90E2"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#357ABD"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="StatusBarItemStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="10,0"/>
+        </Style>
+
+        <converters:ScaleToStringConverter x:Key="ScaleToStringConverter"/>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Background="{StaticResource PrimaryBrush}"
+                Padding="5,3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <Button x:Name="BtnModel"
+                            Style="{StaticResource ToolbarButtonStyle}"
+                            Content="Модель: η=0.04"
+                            Click="BtnModel_Click"/>
+
+                    <Button x:Name="BtnClearCache"
+                            Style="{StaticResource ToolbarButtonStyle}"
+                            Content="Очистить кэш"
+                            Click="BtnClearCache_Click"
+                            ToolTip="Очистить временные данные из памяти"/>
+
+                    <Button x:Name="BtnAbout"
+                            Style="{StaticResource ToolbarButtonStyle}"
+                            Content="О программе"
+                            Click="BtnAbout_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1"
+                Background="{StaticResource SecondaryBrush}"
+                Padding="10,8">
+            <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Button x:Name="NavLoadImages"
+                        Style="{StaticResource NavigationButtonStyle}"
+                        Content="Загрузка изображений"
+                        Click="NavLoadImages_Click"
+                        ToolTip="Загрузить изображения для анализа. Внимание, загружайте только изображения дефектов стальных поверхностей!!!">
+                </Button>
+
+                <Button x:Name="NavAnalysis"
+                        Style="{StaticResource NavigationButtonStyle}"
+                        Content="Запустить анализ"
+                        Click="NavAnalysis_Click"
+                        IsEnabled="False"
+                        ToolTip="Запустить кластеризацию дефектов"/>
+
+                <Button x:Name="NavResults"
+                        Style="{StaticResource NavigationButtonStyle}"
+                        Content="Результаты"
+                        Click="NavResults_Click"
+                        IsEnabled="False"
+                        ToolTip="Просмотр результатов анализа"/>
+
+                <Button x:Name="NavVisualization"
+                        Style="{StaticResource NavigationButtonStyle}"
+                        Content="Визуализация"
+                        Click="NavVisualization_Click"
+                        IsEnabled="False"
+                        ToolTip="t-SNE/UMAP проекции и прототипы кластеров"/>
+
+                <Button x:Name="NavExport"
+                        Style="{StaticResource NavigationButtonStyle}"
+                        Content="Экспорт"
+                        Click="NavExport_Click"
+                        IsEnabled="False"
+                        ToolTip="Экспортировать результаты в JSON/CSV/PDF"/>
+            </WrapPanel>
+        </Border>
+
+        <Border Grid.Row="2" Background="White">
+            <Frame x:Name="MainFrame"
+                   NavigationUIVisibility="Hidden"
+                   Content="{Binding CurrentPage}"/>
+        </Border>
+
+        <Border Grid.Row="3"
+                Background="{StaticResource StatusBarBrush}"
+                Padding="8,5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="Модель:" Style="{StaticResource StatusBarItemStyle}"/>
+                    <TextBlock x:Name="StatusModel" 
+                              Text="η=0.04"
+                              Style="{StaticResource StatusBarItemStyle}"
+                              FontWeight="Bold"/>
+                </StackPanel>
+
+                <Separator Grid.Column="1" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" 
+                          Background="#4A6FA5" Margin="5,0"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <TextBlock Text="Язык:" Style="{StaticResource StatusBarItemStyle}"/>
+                    <TextBlock x:Name="StatusLanguage" 
+                              Text="RU (UTF-8)"
+                              Style="{StaticResource StatusBarItemStyle}"
+                              FontWeight="Bold"/>
+                </StackPanel>
+
+                <Separator Grid.Column="3" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" 
+                    Background="#4A6FA5" Margin="5,0"/>
+
+                <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right"
+                        ToolTip="Размер кэша">
+                    <TextBlock Text="Кеш" FontSize="11" VerticalAlignment="Center" Margin="0,0,3,0" Style="{StaticResource StatusBarItemStyle}"/>
+                    <TextBlock x:Name="StatusCache" 
+                              Text="0 KB"
+                              Style="{StaticResource StatusBarItemStyle}"
+                              FontWeight="Bold"/>   
+                </StackPanel>
+
+                <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock x:Name="StatusTime" 
+                              Style="{StaticResource StatusBarItemStyle}"/>
+                </StackPanel>
+
+                <Separator Grid.Column="6" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" 
+                          Background="#4A6FA5" Margin="5,0"/>
+
+                <StackPanel Grid.Column="7" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Масштаб:" Style="{StaticResource StatusBarItemStyle}"/>
+                    <TextBlock x:Name="StatusScale" 
+                              Text="100%"
+                              Style="{StaticResource StatusBarItemStyle}"
+                              FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
